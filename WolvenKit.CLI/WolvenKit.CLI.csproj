@@ -25,7 +25,7 @@
       <DebugType>embedded</DebugType>
     <PublishSingleFile>false</PublishSingleFile>
     <RuntimeIdentifier>linux-x64</RuntimeIdentifier>
-    <SelfContained>false</SelfContained>
+    <SelfContained>true</SelfContained>
   </PropertyGroup>
 
   <ItemGroup>
