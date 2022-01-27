@@ -284,3 +284,6 @@ WolvenKit.IrrlichtLime/Release-x64
 Libs/Irrlicht.dll
 WolvenKit.IrrlichtLime/Release-x86
 msbuild.binlog
+
+# Ignore patch files
+*.patch
