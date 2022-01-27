@@ -189,7 +189,7 @@ namespace WolvenKit.Common.Oodle
         /// <exception cref="NotImplementedException"></exception>
         public static unsafe int Decompress(byte[] inputBuffer, byte[] outputBuffer)
         {
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) || RuntimeInformation.IsOSPlatform(OSPlatform.Linux)
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) || RuntimeInformation.IsOSPlatform(OSPlatform.Linux) || RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
 #pragma warning disable 162
 
