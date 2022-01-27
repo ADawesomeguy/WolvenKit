@@ -18,19 +18,6 @@ namespace WolvenKit.CLI
         [STAThread]
         public static void Main(string[] args)
         {
-            // try get oodle dll from game
-            if ((RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) && !TryCopyOodleLib())
-            {
-                Console.WriteLine("Could not automatically find oo2ext_7_win64.dll. " +
-                           "Please manually copy and paste the DLL found in <gamedir>\\Cyberpunk 2077\\bin\\x64\\oo2ext_7_win64.dll into this folder: " +
-                           $"{AppDomain.CurrentDomain.BaseDirectory}.");
-                return;
-            }
-
-            var oodlePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "oo2ext_7_win64.dll");
-            OodleLoadLib.Load(oodlePath);
-
-
             var rootCommand = new RootCommand
             {
                 new ArchiveCommand(),
@@ -154,36 +141,6 @@ namespace WolvenKit.CLI
 #pragma warning restore CA1416
 
             return cp77BinDir;
-        }
-
-        private static bool TryCopyOodleLib()
-        {
-            var ass = AppDomain.CurrentDomain.BaseDirectory;
-            var destFileName = Path.Combine(ass, "oo2ext_7_win64.dll");
-            if (File.Exists(destFileName))
-            {
-                return true;
-            }
-
-            var cp77BinDir = TryGetGameInstallDir();
-            if (string.IsNullOrEmpty(cp77BinDir))
-            {
-                return false;
-            }
-
-            // copy oodle dll
-            var oodleInfo = new FileInfo(Path.Combine(cp77BinDir, "oo2ext_7_win64.dll"));
-            if (!oodleInfo.Exists)
-            {
-                return false;
-            }
-
-            if (!File.Exists(destFileName))
-            {
-                oodleInfo.CopyTo(destFileName);
-            }
-
-            return true;
         }
     }
 }

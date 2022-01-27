@@ -75,32 +75,19 @@ namespace WolvenKit.Common.Oodle
                 var outputAddress = outputHandle.AddrOfPinnedObject();
 
                 var result = 0;
-                if (true)
-                {
-                    result = (int)OodleLoadLib.OodleLZ_Compress(
-                        inputAddress,
-                        outputAddress,
-                        inputCount,
-                        algo,
-                        level
-                    );
-                }
-                else
 #pragma warning disable 162
-                {
-                    result = (int)OodleNative.Compress(
-                        (int)algo,
-                        inputAddress,
-                        inputCount,
-                        outputAddress,
-                        (int)level,
-                        IntPtr.Zero,
-                        IntPtr.Zero,
-                        IntPtr.Zero,
-                        IntPtr.Zero,
-                        0
-                    );
-                }
+                result = (int)OodleNative.Compress(
+                    (int)algo,
+                    inputAddress,
+                    inputCount,
+                    outputAddress,
+                    (int)level,
+                    IntPtr.Zero,
+                    IntPtr.Zero,
+                    IntPtr.Zero,
+                    IntPtr.Zero,
+                    0
+                );
 #pragma warning restore 162
 
 
