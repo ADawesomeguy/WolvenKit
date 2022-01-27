@@ -60,10 +60,10 @@ jobs:
 
     # Create assets
     # create zip
-    - run: Compress-Archive -Path ${{env.OUT}}* -DestinationPath ${{env.FINALOUT}}/${{env.PORTABLE}}
+    # - run: Compress-Archive -Path ${{env.OUT}}* -DestinationPath ${{env.FINALOUT}}/${{env.PORTABLE}}
     - run: Compress-Archive -Path ${{env.OUTC}}* -DestinationPath ${{env.FINALOUT}}/${{env.CONSOLE}}
     # create installer
-    - run: .\Installers\ISCC\ISCC.exe /O"${{env.FINALOUT}}" /dMyAppBaseDir=".${{env.OUT}}" .\Installers\installer.iss
+    # - run: .\Installers\ISCC\ISCC.exe /O"${{env.FINALOUT}}" /dMyAppBaseDir=".${{env.OUT}}" .\Installers\installer.iss
 
     # RELEASE
     - name: Release
