@@ -24,8 +24,8 @@
       <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
       <DebugType>embedded</DebugType>
     <PublishSingleFile>false</PublishSingleFile>
-    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
-    <SelfContained>true</SelfContained>
+    <RuntimeIdentifier>linux-x64</RuntimeIdentifier>
+    <SelfContained>false</SelfContained>
   </PropertyGroup>
 
   <ItemGroup>
