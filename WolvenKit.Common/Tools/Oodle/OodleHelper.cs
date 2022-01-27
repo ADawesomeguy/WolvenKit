@@ -192,28 +192,6 @@ namespace WolvenKit.Common.Oodle
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) || RuntimeInformation.IsOSPlatform(OSPlatform.Linux) || RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
 #pragma warning disable 162
-
-                if (true)
-                {
-                    var inputHandle = GCHandle.Alloc(inputBuffer, GCHandleType.Pinned);
-                    var inputAddress = inputHandle.AddrOfPinnedObject();
-                    var outputHandle = GCHandle.Alloc(outputBuffer, GCHandleType.Pinned);
-                    var outputAddress = outputHandle.AddrOfPinnedObject();
-
-
-
-                    var r= OodleLoadLib.OodleLZ_Decompress(inputAddress,
-                        outputAddress,
-                        inputBuffer.Length,
-                        outputBuffer.Length
-                        );
-
-                    inputHandle.Free();
-                    outputHandle.Free();
-
-                    return r;
-                }
-
                 return OodleNative.OodleLZ_Decompress(
                     inputBuffer,
                     inputBuffer.Length,
@@ -230,11 +208,6 @@ namespace WolvenKit.Common.Oodle
                     OodleNative.OodleLZ_Decode.Unthreaded);
 #pragma warning restore 162
 
-            }
-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-            {
-                return OodleNative.Kraken_Decompress(inputBuffer, inputBuffer.Length, outputBuffer,
-                    outputBuffer.Length);
             }
             else
             {
