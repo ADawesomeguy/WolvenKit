@@ -189,7 +189,7 @@ namespace WolvenKit.Common.Oodle
         /// <exception cref="NotImplementedException"></exception>
         public static unsafe int Decompress(byte[] inputBuffer, byte[] outputBuffer)
         {
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) || RuntimeInformation.IsOSPlatform(OSPlatform.Linux)
             {
 #pragma warning disable 162
 
@@ -233,7 +233,7 @@ namespace WolvenKit.Common.Oodle
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
-                return OozNative.Kraken_Decompress(inputBuffer, inputBuffer.Length, outputBuffer,
+                return OodleNative.Kraken_Decompress(inputBuffer, inputBuffer.Length, outputBuffer,
                     outputBuffer.Length);
             }
             else

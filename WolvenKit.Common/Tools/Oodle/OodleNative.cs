@@ -82,7 +82,7 @@ namespace WolvenKit.Common.Oodle
         [DllImport("oo2ext_7_win64.dll", EntryPoint = "OodleLZ_GetCompressedBufferSizeNeeded", CallingConvention = CallingConvention.StdCall)]
         public static extern long GetCompressedBufferSizeNeeded(long size);
 
-        [DllImport("ooz")]
+        [DllImport("ooz", EntryPoint = "_Z17Kraken_DecompressPKhmPhm")]
         public static extern int OodleLZ_Decompress(byte[] buffer, long bufferSize, byte[] outputBuffer, long outputBufferSize,
             OodleLZ_FuzzSafe fuzzSafetyFlag,
             OodleLZ_CheckCRC crcCheckFlag,
