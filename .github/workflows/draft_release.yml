@@ -27,6 +27,7 @@ jobs:
     - run: echo "PROJC=./WolvenKit.CLI/WolvenKit.CLI.csproj" >> $env:GITHUB_ENV
     - run: echo "OUT=./publish/app/" >> $env:GITHUB_ENV
     - run: echo "OUTC=./publish/console/" >> $env:GITHUB_ENV
+    - run: echo "OUTCL=./publish/console-linux/" >> $env:GITHUB_ENV
     - run: echo "FINALOUT=./publish" >> $env:GITHUB_ENV
     - run: echo "NAME=WolvenKit" >> $env:GITHUB_ENV
     - run: echo "REF=${{github.ref}}" >> $env:GITHUB_ENV
@@ -50,11 +51,15 @@ jobs:
    # Publish app
     - run: msbuild ${{env.PROJ}} -t:restore -t:Build -t:Publish /p:PublishDir=".${{env.OUT}}" /p:InformationalVersion="${{env.VERSION}}" /p:Configuration=Release /p:Platform=x64 /p:PublishReadyToRun=False /p:PublishSingleFile=False /p:PublishTrimmed=False
 
-    # Publish console
+    # Publish console win
     - run: msbuild ${{env.PROJC}} -t:restore -t:Build -t:Publish /p:PublishDir=".${{env.OUTC}}" /p:Configuration=Release /p:Platform=x64 /p:PublishReadyToRun=False /p:PublishTrimmed=False
+
+    # Publish console linux
+    - run: msbuild ${{env.PROJC}} -t:restore -t:Build -t:Publish /p:PublishDir=".${{env.OUTCL}}" /p:RuntimeIdentifier=linux-x64 /p:Configuration=Release /p:Platform=x64 /p:PublishReadyToRun=False /p:PublishTrimmed=False
 
     - run: echo "PORTABLE=${{env.NAME}}-${{env.VERSION}}.zip" >> $env:GITHUB_ENV
     - run: echo "CONSOLE=${{env.NAME}}.Console-${{env.VERSIONC}}.zip" >> $env:GITHUB_ENV
+    - run: echo "CONSOLELINUX=${{env.NAME}}.Console-Linux-${{env.VERSIONC}}.zip" >> $env:GITHUB_ENV
     - run: echo "INSTALLER=${{env.NAME}}-installer-${{env.VERSION}}.exe" >> $env:GITHUB_ENV
     - run: echo "MANIFEST=manifest.json" >> $env:GITHUB_ENV
 
@@ -62,6 +67,7 @@ jobs:
     # create zip
     - run: Compress-Archive -Path ${{env.OUT}}* -DestinationPath ${{env.FINALOUT}}/${{env.PORTABLE}}
     - run: Compress-Archive -Path ${{env.OUTC}}* -DestinationPath ${{env.FINALOUT}}/${{env.CONSOLE}}
+    - run: Compress-Archive -Path ${{env.OUTC}}* -DestinationPath ${{env.FINALOUT}}/${{env.CONSOLELINUX}}
     # create installer
     - run: .\Installers\ISCC\ISCC.exe /O"${{env.FINALOUT}}" /dMyAppBaseDir=".${{env.OUT}}" .\Installers\installer.iss
 
@@ -70,5 +76,5 @@ jobs:
       run: |
           gh release create ${{ env.VERSION }} -t "${{env.NAME}} v${{env.VERSION}}" -F ./RELEASE.md -d -p ${{ env.FILES }}
       env:
-        FILES: ${{env.FINALOUT}}/${{env.PORTABLE}} ${{env.FINALOUT}}/${{env.CONSOLE}} ${{env.FINALOUT}}/${{env.INSTALLER}} ${{env.FINALOUT}}/${{env.MANIFEST}}
+        FILES: ${{env.FINALOUT}}/${{env.PORTABLE}} ${{env.FINALOUT}}/${{env.CONSOLELINUX}} ${{env.FINALOUT}}/${{env.CONSOLE}} ${{env.FINALOUT}}/${{env.INSTALLER}} # ${{env.FINALOUT}}/${{env.MANIFEST}}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
