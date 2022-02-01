@@ -1,0 +1,42 @@
+name: wkit-check-console
+on: [push, workflow_dispatch, pull_request]
+
+jobs:
+  check-console-win:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: checkout
+      uses: actions/checkout@v2
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.x
+
+    - name: publish
+      run: dotnet publish ./WolvenKit.CLI/WolvenKit.CLI.csproj -o ./publish_cli -r win-x64 -c Release --no-self-contained
+
+    - uses: actions/upload-artifact@v2
+      with:
+        name: wolvenkit_cli
+        path: ./publish_cli
+
+
+  check-console-linux:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: checkout
+      uses: actions/checkout@v2
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.x
+
+    - name: publish
+      run: dotnet publish ./WolvenKit.CLI/WolvenKit.CLI.csproj -o ./publish_cli_linux -r linux-x64 -c Release --no-self-contained
+
+    - uses: actions/upload-artifact@v2
+      with:
+        name: wolvenkit_cli_linux
+        path: ./publish_cli_linux
