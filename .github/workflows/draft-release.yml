@@ -1,20 +1,74 @@
 name: wkit-draft-release
 on:
+  push:
   workflow_dispatch:
 
 jobs:
-  draft-wkit-win:
+  desktop-win:
     runs-on: windows-2022
 
     steps:
-    # setup
-    - name: checkout
+    - name: Checkout
       uses: actions/checkout@v2
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 6.x
 
+    - name: Publish with Dotnet
+      run: dotnet publish .\WolvenKit\WolvenKit.csproj -o .\publish -c Release
+
+    - uses: actions/upload-artifact@v2
+      with:
+        name: WolvenKit Desktop
+        path: .\publish
+
+  console-win:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.x
+
+    - name: Publish with Dotnet
+      run: dotnet publish ./WolvenKit.CLI/WolvenKit.CLI.csproj -o ./publish_cli -r win-x64 -c Release --no-self-contained
+
+    - uses: actions/upload-artifact@v2
+      with:
+        name: WolvenKit CLI
+        path: ./publish_cli
+
+
+  console-linux:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.x
+
+    - name: Publish with Dotnet
+      run: dotnet publish ./WolvenKit.CLI/WolvenKit.CLI.csproj -o ./publish_cli_linux -r linux-x64 -c Release --no-self-contained
+
+    - uses: actions/upload-artifact@v2
+      with:
+        name: WolvenKit CLI Linux
+        path: ./publish_cli_linux
+
+  release:
+    runs-on: ubuntu-latest
+    needs: [console-linux, console-win, desktop-win]
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
      # environmental variables
     - run: echo "PROJ=./WolvenKit/WolvenKit.csproj" >> $env:GITHUB_ENV
     - run: echo "PROJC=./WolvenKit.CLI/WolvenKit.CLI.csproj" >> $env:GITHUB_ENV
@@ -24,43 +78,25 @@ jobs:
     - run: echo "NAME=WolvenKit" >> $env:GITHUB_ENV
     - run: echo "REF=${{github.ref}}" >> $env:GITHUB_ENV
     - run: echo "SHA=${{github.sha}}" >> $env:GITHUB_ENV
+    - run: echo "VERSION=${GITHUB_REF#refs/*/}" >> $env:GITHUB_ENV
+    - run: echo "VERSIONC=${GITHUB_REF#refs/*/}" >> $env:GITHUB_ENV
     - run: echo "MREPO=${{github.repository}}" >> $env:GITHUB_ENV
-
-    - name: Get version
-      uses: naminodarie/get-net-sdk-project-versions-action@v1
-      id: get-version
-      with:
-        proj-path:  ${{env.PROJ}}
-    - name: Get console version
-      uses: naminodarie/get-net-sdk-project-versions-action@v1
-      id: get-version-cli
-      with:
-        proj-path: ${{env.PROJC}}
-
-    - run: echo "VERSION=${{steps.get-version.outputs.assembly-version}}" >> $env:GITHUB_ENV
-    - run: echo "VERSIONC=${{steps.get-version-cli.outputs.assembly-version}}" >> $env:GITHUB_ENV
-
-    # Publish app
-    - run: dotnet publish ${{env.PROJ}} -o ${{env.OUT}} -c Release -p:InformationalVersion="${{env.VERSION}}"
-
-    # Publish console
-    - run: dotnet publish ${{env.PROJC}} -o ${{env.OUTC}} -c Release
-
     - run: echo "PORTABLE=${{env.NAME}}-${{env.VERSION}}.zip" >> $env:GITHUB_ENV
     - run: echo "CONSOLE=${{env.NAME}}.Console-${{env.VERSIONC}}.zip" >> $env:GITHUB_ENV
+    - run: echo "CONSOLELINUX=${{env.NAME}}.ConsoleLinux-${{env.VERSIONC}}.zip" >> $env:GITHUB_ENV
     - run: echo "INSTALLER=${{env.NAME}}-installer-${{env.VERSION}}.exe" >> $env:GITHUB_ENV
 
-    # Create assets
-    # create zip
-    - run: Compress-Archive -Path ${{env.OUT}}* -DestinationPath ${{env.FINALOUT}}/${{env.PORTABLE}}
-    - run: Compress-Archive -Path ${{env.OUTC}}* -DestinationPath ${{env.FINALOUT}}/${{env.CONSOLE}}
-    # create installer
-    - run: .\Installers\ISCC\ISCC.exe /O"${{env.FINALOUT}}" /dMyAppBaseDir=".${{env.OUT}}" .\Installers\installer.iss
+    - name: Download artifacts
+      uses: actions/download-artifact@v2
+    - run: sudo apt-get install zip -y
+    - run: mkdir -p "${{env.FINALOUT}}"
+    - run: zip -r "${{env.FINALOUT}}"/"${{env.PORTABLE}}" "WolvenKit Desktop"
+    - run: zip -r "${{env.FINALOUT}}"/"${{env.CONSOLE}}" "WolvenKit CLI"
+    - run: zip -r "${{env.FINALOUT}}"/"${{env.CONSOLELINUX}}" "WolvenKit CLI Linux"
 
-    # RELEASE
     - name: Release
       run: |
-          gh release create ${{ env.VERSION }} -t "${{env.NAME}} v${{env.VERSION}}" -F ./RELEASE.md -d -p ${{ env.FILES }}
+          gh release create -t "${{env.NAME}} v${{env.VERSION}}" -F ./RELEASE.md -d -p ${{ env.FILES }}
       env:
-        FILES: ${{env.FINALOUT}}/${{env.PORTABLE}} ${{env.FINALOUT}}/${{env.CONSOLE}} ${{env.FINALOUT}}/${{env.INSTALLER}}
+        FILES: ${{env.FINALOUT}}/${{env.PORTABLE}} ${{env.FINALOUT}}/${{env.CONSOLE}} ${{env.FINALOUT}}/${{env.CONSOLELINUX}} #${{env.FINALOUT}}/${{env.INSTALLER}}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
