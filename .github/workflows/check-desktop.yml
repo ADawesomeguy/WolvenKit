@@ -6,17 +6,17 @@ jobs:
     runs-on: windows-2022
 
     steps:
-    - name: checkout
+    - name: Checkout
       uses: actions/checkout@v2
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 6.x
 
-    - name: publish
+    - name: Publish with Dotnet
       run: dotnet publish .\WolvenKit\WolvenKit.csproj -o .\publish -c Release
 
     - uses: actions/upload-artifact@v2
       with:
-        name: wolvenkit
+        name: WolvenKit Desktop
         path: .\publish
