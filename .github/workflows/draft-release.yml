@@ -113,7 +113,7 @@ jobs:
 
     # RELEASE
     - name: Release
-    - uses: ncipollo/release-action@v1
+      uses: ncipollo/release-action@v1
       with:
         draft: true
         generateReleaseNotes: true
