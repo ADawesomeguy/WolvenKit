@@ -104,7 +104,7 @@ jobs:
     # create zip
     - run: sudo apt-get install zip -y
     - run: mkdir -p ${{ env.FINALOUT}}
-    - run: ls -R ${{ env.FINALOUT }}
+    - run: ls -R
     - run: zip -r ${{ env.FINALOUT }}/${{ env.PORTABLE }} "WolvenKit Desktop"
     - run: zip -r ${{ env.FINALOUT }}/${{ env.CONSOLE }} "WolvenKit CLI"
     - run: zip -r ${{ env.FINALOUT }}/${{ env.CONSOLELINUX }} "WolvenKit CLI Linux"
