@@ -1,0 +1,22 @@
+pipeline:
+  build:
+    image: mcr.microsoft.com/dotnet/sdk:6.0.101-windowsservercore-ltsc2022
+    commands:
+      - dotnet msbuild ./WolvenKit.CLI/WolvenKit.CLI.csproj -t:restore -t:Build -t:Publish /p:PublishDir="../publish/cli" /p:Configuration=Release /p:Platform=x64 /p:PublishReadyToRun=False /p:PublishSingleFile=False /p:PublishTrimmed=False
+
+  zip:
+    image: kramos/alpine-zip
+    commands:
+      - zip -r out.zip publish
+#    when:
+#      event: tag
+#      matrix:
+#        GO_VERSION: 1.17.6
+
+  release:
+    image: plugins/github-release
+    settings:
+      api_key:
+        from_secret: github_token
+      files: "*.zip"
+      draft: true
