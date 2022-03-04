@@ -1,0 +1,76 @@
+using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
+using WolvenKit.Common;
+using WolvenKit.Common.Interfaces;
+using WolvenKit.Common.Model.Arguments;
+using WolvenKit.Common.Services;
+using WolvenKit.Core.Services;
+namespace TW3Tools.Tasks
+{
+    public interface IConsoleFunctions
+    {
+        //public void ArchiveTask(string[] path, string pattern, string regex, bool diff, bool list);
+        /*public void UnbundleTask(string[] path, string outpath, string hash, string pattern, string regex,
+            bool DEBUG_decompress = false);
+        public Task Cr2wTask(string[] path, string outpath, bool deserialize, bool serialize, string pattern,
+            string regex, ETextConvertFormat format);
+        public void ExportTask(string[] path, string outDir, EUncookExtension? uncookext, bool? flip,
+            ECookedFileFormat[] forcebuffers);*/
+        public void ImportTask(string[] path, string outDir, bool keep);
+        /*public void PackTask(string[] path, string outpath);
+        public void UncookTask(string[] path, string outpath, string rawOutDir,
+            EUncookExtension? uext, bool? flip, ulong hash, string pattern, string regex, bool unbundle,
+            ECookedFileFormat[] forcebuffers);*/
+    }
+
+    public partial class ConsoleFunctions : IConsoleFunctions
+    {
+        private readonly ILoggerService _loggerService;
+        private readonly IRed3ModTools _modTools;
+        private readonly IProgressService<double> _progressService;
+
+        private readonly IOptions<CommonImportArgs> _commonImportArgs;
+        private readonly IOptions<XbmImportArgs> _xbmImportArgs;
+        private readonly IOptions<GltfImportArgs> _gltfImportArgs;
+        private readonly IOptions<XbmExportArgs> _xbmExportArgs;
+        private readonly IOptions<MeshExportArgs> _meshExportArgs;
+        private readonly IOptions<MorphTargetExportArgs> _morphTargetExportArgs;
+        private readonly IOptions<MlmaskExportArgs> _mlmaskExportArgs;
+        private readonly IOptions<WemExportArgs> _wemExportArgs;
+        private readonly IOptions<AnimationExportArgs> _animationExportArgs;
+
+
+        public ConsoleFunctions(
+            ILoggerService loggerService,
+            IProgressService<double> progress,
+            IRed3ModTools modTools,
+
+            IOptions<CommonImportArgs> commonImportArgs,
+            IOptions<XbmImportArgs> xbmImportArgs,
+            IOptions<GltfImportArgs> gltfImportArgs,
+            IOptions<XbmExportArgs> xbmExportArgs,
+            IOptions<MeshExportArgs> meshExportArgs,
+            IOptions<MorphTargetExportArgs> morphTargetExportArgs,
+            IOptions<MlmaskExportArgs> mlmaskExportArgs,
+            IOptions<WemExportArgs> wemExportArgs,
+            IOptions<AnimationExportArgs> animationExportArgs
+        )
+        {
+            _loggerService = loggerService;
+            _modTools = modTools;
+            _progressService = progress;
+
+            _commonImportArgs = commonImportArgs;
+            _xbmImportArgs = xbmImportArgs;
+            _gltfImportArgs = gltfImportArgs;
+            _xbmExportArgs = xbmExportArgs;
+            _meshExportArgs = meshExportArgs;
+            _morphTargetExportArgs = morphTargetExportArgs;
+            _mlmaskExportArgs = mlmaskExportArgs;
+            _wemExportArgs = wemExportArgs;
+            _animationExportArgs = animationExportArgs;
+        }
+
+
+    }
+}
