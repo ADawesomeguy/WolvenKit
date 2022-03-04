@@ -38,6 +38,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Config", "Config", "{F13486
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Witcher3.CLI", "Witcher3.CLI\Witcher3.CLI.csproj", "{35C1A3E9-B513-480A-B2D4-71D6F9545A74}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -93,6 +95,12 @@ Global
 		{1F7EFA8C-0FAC-4F88-BE14-EAB6177AE1B4}.Profile|x64.Build.0 = Release|x64
 		{1F7EFA8C-0FAC-4F88-BE14-EAB6177AE1B4}.Release|x64.ActiveCfg = Release|x64
 		{1F7EFA8C-0FAC-4F88-BE14-EAB6177AE1B4}.Release|x64.Build.0 = Release|x64
+		{35C1A3E9-B513-480A-B2D4-71D6F9545A74}.Debug|x64.ActiveCfg = Debug|x64
+		{35C1A3E9-B513-480A-B2D4-71D6F9545A74}.Debug|x64.Build.0 = Debug|x64
+		{35C1A3E9-B513-480A-B2D4-71D6F9545A74}.Profile|x64.ActiveCfg = Debug|x64
+		{35C1A3E9-B513-480A-B2D4-71D6F9545A74}.Profile|x64.Build.0 = Debug|x64
+		{35C1A3E9-B513-480A-B2D4-71D6F9545A74}.Release|x64.ActiveCfg = Release|x64
+		{35C1A3E9-B513-480A-B2D4-71D6F9545A74}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
